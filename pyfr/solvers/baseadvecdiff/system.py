@@ -53,6 +53,8 @@ class BaseAdvectionDiffusionSystem(BaseAdvectionSystem):
 
         g1.commit()
 
+        if self.backend.mpitype == 'cuda-aware':
+            self.backend.wait()
         g2 = self.backend.graph()
         g2.add_mpi_reqs(m['artvisc_fpts_recv'])
         g2.add_mpi_reqs(m['vect_fpts_recv'])
@@ -157,6 +159,8 @@ class BaseAdvectionDiffusionSystem(BaseAdvectionSystem):
 
         g2.commit()
 
+        if self.backend.mpitype == 'cuda-aware':
+            self.backend.wait()
         g3 = self.backend.graph()
 
         # Compute the common normal flux at our MPI interfaces
@@ -211,6 +215,8 @@ class BaseAdvectionDiffusionSystem(BaseAdvectionSystem):
         g1.add_all(k['eles/tgradpcoru_upts'])
         g1.commit()
 
+        if self.backend.mpitype == 'cuda-aware':
+            self.backend.wait()
         g2 = self.backend.graph()
 
         # Compute the common solution at our MPI interfaces
